@@ -1,5 +1,35 @@
-let staticCacheName = 'v1';
+if (typeof idb === "undefined") {
+	self.importScripts('js/idb.js');
+}
+let staticCacheName = 'restaurant-001';
 
+
+const dbPromise = idb.open('restaurants-db',1,upgradeDB =>{
+	switch (upgradeDB.oldVersion) {
+		case 0:
+		  upgradeDB.createObjectStore('restaurants');
+	  }
+});
+
+const idbKeyVal = {
+	get(key) {
+	  return dbPromise.then(db => {
+		return db
+		  .transaction('restaurants')
+		  .objectStore('restaurants')
+		  .get(key);
+	  });
+	},
+	set(key, val) {
+	  return dbPromise.then(db => {
+		const tx = db.transaction('restaurants', 'readwrite');
+		tx.objectStore('restaurants').put(val, key);
+		return tx.complete;
+	  });
+	}
+  };
+
+  //cache to install
 self.addEventListener('install', function(event) {
 	event.waitUntil(
 		caches.open(staticCacheName).then(function(cache) {
@@ -35,12 +65,17 @@ self.addEventListener('install', function(event) {
 		  './restaurant.html?id=8',
 		  './restaurant.html?id=9',
 		  './restaurant.html?id=10',
-               'https://unpkg.com/leaflet@1.3.1/dist/leaflet.css'
-			]);
+		  'http://localhost:1337/restaurants/',
+		  'https://unpkg.com/leaflet@1.3.1/dist/leaflet.js',
+		  'https://fonts.googleapis.com/css?family=Open+Sans:300,400',
+		  'https://unpkg.com/leaflet@1.3.1/dist/leaflet.css'
+			]).catch(error => {
+				console.log('Cache open failed: ' + error);
+			  });
 		})
 	);
 });
-
+//deleting old cache
 self.addEventListener('activate', function(event) {
 	event.waitUntil(
 		caches.keys()
@@ -57,11 +92,61 @@ self.addEventListener('activate', function(event) {
 	);
 })
 
-self.addEventListener('fetch', function(event) {
-	event.respondWith(
-		caches.match(event.request)
-		.then(function(response) {
-			return response || fetch(event.request);
-		})
-	);
-});
+self.addEventListener('fetch', event => {
+	const request = event.request;
+	const requestUrl = new URL(request.url);
+	if (requestUrl.port === '1337') {
+	  event.respondWith(idbCache(request));
+	}
+	else {
+	  event.respondWith(cacheResponseData(request));
+	}
+  });
+
+  function idbCache(request) {
+	return idbKeyVal.get('restaurants')
+	  .then(restaurants => {
+		return (
+		  restaurants ||
+		  fetch(request)
+			.then(response => response.json())
+			.then(json => {
+			  idbKeyVal.set('restaurants', json);
+			  return json;
+			})
+		);
+	  })
+	  .then(response => new Response(JSON.stringify(response)))
+	  .catch(error => {
+		return new Response(error, {
+		  status: 404,
+		  statusText: 'Not found'
+		});
+	  });
+	}
+	
+	  function cacheResponseData(request) {
+	
+		return caches.match(request).then(response => {
+		  return response || fetch(request).then(fetchResponse => {
+			return caches.open(staticCacheName).then(cache => {
+			
+			  if (!fetchResponse.url.includes('browser-sync')) { 
+				cache.put(request, fetchResponse.clone()); 
+			  }
+			  return fetchResponse; 
+			});
+		  });
+		}).catch(error => {
+		 
+		
+		  return new Response(error, {
+			status: 404,
+			statusText: 'Not connected to the internet'
+		  });
+		});
+		
+	
+  }
+
+  
