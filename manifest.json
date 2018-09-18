@@ -16,7 +16,7 @@
     "name": "mws-restaurant-stage-2",
     "orientation": "portrait",
     "short_name": "restaurant",
-    "start_url": "https://github.com/homemix/mws-restaurant-stage-2",
+    "start_url": "/",
     "theme_color": "#000000",
     "version": "0.1"
   
