@@ -16,7 +16,7 @@
     "name": "mws-restaurant-stage-2",
     "orientation": "portrait",
     "short_name": "restaurant",
-    "start_url": "/",
+    "start_url": "/index.html",
     "theme_color": "#000000",
     "version": "0.1"
   
