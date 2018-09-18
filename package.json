@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/homemix/mws-restaurant-stage-1.git"
+    "url": "git+https://github.com/homemix/mws-restaurant-stage-1.git"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
@@ -12,5 +12,24 @@
     "grunt-contrib-uglify": "~0.5.0",
     "grunt-responsive-images": "^0.1.9"
   },
-  "dependencies": {}
+  "dependencies": {
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-ng-annotate": "^2.1.0",
+    "gulp-notify": "^3.2.0",
+    "gulp-rename": "^1.4.0",
+    "gulp-sourcemaps": "^2.6.4",
+    "gulp-uglify": "^3.0.1"
+  },
+  "description": "---\r ### Mws-restaurant-stage-1 solution",
+  "bugs": {
+    "url": "https://github.com/homemix/mws-restaurant-stage-1/issues"
+  },
+  "homepage": "https://github.com/homemix/mws-restaurant-stage-1#readme",
+  "main": "Gruntfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "kennedy wambua",
+  "license": "ISC"
 }
