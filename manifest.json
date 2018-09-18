@@ -1,7 +1,7 @@
 {
     "author": "kennedy wambua",
     "background_color": "#ffffff",
-    "description": "mws-restaurant-stage-1",
+    "description": "mws-restaurant-stage-2",
     "display": "standalone",
     "icons": [
   
@@ -13,10 +13,10 @@
   
     ],
     "manifest_version": 1,
-    "name": "mws-restaurant-stage-1",
+    "name": "mws-restaurant-stage-2",
     "orientation": "portrait",
     "short_name": "restaurant",
-    "start_url": "http://127.0.0.1:8888",
+    "start_url": "https://github.com/homemix/mws-restaurant-stage-2",
     "theme_color": "#000000",
     "version": "0.1"
   
