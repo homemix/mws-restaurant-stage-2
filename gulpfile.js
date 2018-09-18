@@ -4,8 +4,8 @@ let gulp = require('gulp'),
  concat = require('gulp-concat'),
 rename = require('gulp-rename'),
  ngAnnotate = require('gulp-ng-annotate'),
- notify = require('gulp-notify');
-   
+ notify = require('gulp-notify'),
+ minify = require('gulp-minify');
    
    
  
@@ -33,3 +33,8 @@ let jsAssets = [
             .pipe(gulp.dest('min/js'))
             .pipe(notify('JS Assets compiled Task Done'));
     });
+    gulp.task('compress', function() {
+        gulp.src(['min/js/apps.js'])
+          .pipe(minify())
+          .pipe(gulp.dest('min/js/compress'))
+      });
